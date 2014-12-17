@@ -1,15 +1,40 @@
-## Put comments here that give an overall description of what your
-## functions do
+## The first of these functions creates an object which handles storage and retrieval 
+## of the matrix we want to invert.
+##
+## The second function either returns the previously stored inverted matrix, or, if it 
+## hasn't already been stored, it returns the original inverted solution and stores it.
 
-## Write a short comment describing this function
+
+## makeCacheMatrix creates an object to/from which an invertable matrix can be stored or
+## retrieved
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    m <- NULL
+    set <- function(y) {
+        x <<- y
+        m <<- NULL
+    }
+    get <- function() x
+    setsolve <- function(solve) m <<- mean
+    getsolve <- function() m
+    list(set = set, get = get,
+         setsolve = setsolve,
+         getsolve = getsolve)
 }
 
 
-## Write a short comment describing this function
+## cacheSolve either returns a previously cached solved matrix, or, if that can't be 
+## found, does the inversion and both returns and caches the solution
 
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+    m <- x$getsolve()
+    if(!is.null(m)) {
+        message("getting cached data")
+        return(m)
+    }
+    data <- x$get()
+    m <- solve(data, ...)
+    x$setsolve(m)
+    m
 }
